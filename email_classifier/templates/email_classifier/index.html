@@ -1,0 +1,120 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analisador de E-mails - IA para Classificação Automática</title>
+    <meta name="description" content="Sistema inteligente para classificação automática de e-mails e geração de respostas sugeridas usando inteligência artificial" />
+    <link rel="stylesheet" href="{% static 'email_classifier/styles.css' %}">
+</head>
+<body>
+    <div class="min-h-screen bg-gradient-background">
+        <div class="container">
+            <div class="text-center header">
+                <div class="header-title">
+                    <svg class="mail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    <h1 class="gradient-text">Analisador de E-mails</h1>
+                </div>
+                <p class="subtitle">
+                    Classifique automaticamente e-mails e obtenha sugestões de resposta inteligentes
+                </p>
+            </div>
+
+            <div class="card main-card">
+                <h2 class="card-title">
+                    <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14.5 4h-5L7 2 4.5 4H2v16h20V4h-7.5z"/>
+                        <path d="M7.5 2v2h9V2"/>
+                    </svg>
+                    Envio de E-mail
+                </h2>
+
+                <form method="post" enctype="multipart/form-data" id="emailForm">
+                    {% csrf_token %}
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        
+                        <div class="upload-content">
+                            <p class="upload-text" id="uploadText">Arraste um arquivo aqui ou clique para selecionar</p>
+                            <p class="upload-subtitle">Suporte a arquivos .txt e .pdf</p>
+                        </div>
+                        
+                        <input type="file" name="email_file" accept=".txt,.pdf" id="fileInput" class="file-input">
+                        
+                        <div class="file-badge" id="fileBadge" style="display: none;">
+                            <span id="fileName"></span>
+                        </div>
+                    </div>
+
+                    <div class="separator">
+                        <div class="separator-line"></div>
+                        <span class="separator-text">ou</span>
+                        <div class="separator-line"></div>
+                    </div>
+
+                    <div class="textarea-container">
+                        <textarea 
+                            name="email_text" 
+                            rows="10" 
+                            placeholder="Cole o texto do e-mail aqui..."
+                            id="emailText"
+                            class="email-textarea"
+                        ></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn btn-outline" id="clearBtn" style="display: none;">
+                            Limpar
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="processBtn" disabled>
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 3a6 6 0 0 1 6 6 6 6 0 0 1-3 5.197v3.103l-3-1.5-3 1.5v-3.103A6 6 0 0 1 6 9a6 6 0 0 1 6-6"/>
+                                <path d="M14 9c.552 0 1 .448 1 1 0 .552-.448 1-1 1-.552 0-1-.448-1-1 0-.552.448-1 1-1"/>
+                                <path d="M10 9c.552 0 1 .448 1 1 0 .552-.448 1-1 1-.552 0-1-.448-1-1 0-.552.448-1 1-1"/>
+                            </svg>
+                            <span id="processText">Processar E-mail</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {% if classification %}
+            <div class="card results-card animate-in">
+                <div class="results-content">
+                    <div class="classification-section">
+                        <h2 class="results-title">
+                            <svg class="sparkles-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 3a6 6 0 0 1 6 6 6 6 0 0 1-3 5.197v3.103l-3-1.5-3 1.5v-3.103A6 6 0 0 1 6 9a6 6 0 0 1 6-6"/>
+                            </svg>
+                            Resultado da Classificação
+                        </h2>
+                        <div class="classification-result">
+                            <span class="category-label">Categoria:</span>
+                            <span class="classification-badge {{ classification|lower }}">
+                                {{ classification }}
+                            </span>
+                     </div>
+                    </div>
+
+                    <div class="response-section">
+                        <h3 class="response-title">Resposta Sugerida:</h3>
+                        <div class="response-content">
+                            <p>{{ response_suggestion }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+    <script src="{% static 'email_classifier/script.js' %}"></script>
+</body>
+</html>
