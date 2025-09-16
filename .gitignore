@@ -139,6 +139,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+fine_tuned_model/
 
 # Spyder project settings
 .spyderproject
@@ -175,6 +176,7 @@ cython_debug/
 .pypirc
 
 staticfiles/
+
 .vscode
 .vscode/
 
