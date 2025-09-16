@@ -34,12 +34,12 @@ document.addEventListener('DOMContentLoaded', function() {
     uploadArea.addEventListener('drop', function(e) {
         e.preventDefault();
         uploadArea.classList.remove('drag-over');
-        
+
         const files = Array.from(e.dataTransfer.files);
-        const validFile = files.find(f => 
+        const validFile = files.find(f =>
             f.type === 'text/plain' || f.type === 'application/pdf'
         );
-        
+
         if (validFile) {
             fileInput.files = e.dataTransfer.files;
             handleFile(validFile);
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const hasFile = fileInput.files && fileInput.files.length > 0;
         const hasText = emailText.value.trim().length > 0;
         const hasContent = hasFile || hasText;
-        
+
         processBtn.disabled = !hasContent;
         clearBtn.style.display = hasContent ? 'block' : 'none';
     }
