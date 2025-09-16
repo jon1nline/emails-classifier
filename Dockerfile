@@ -7,9 +7,13 @@ ENV PYTHONUNBUFFERED 1
 # Define o diretório de trabalho no container.
 WORKDIR /app
 
-# Copia o arquivo de dependências e as instala.
-COPY requirements.txt /app/
-RUN pip install -r requirements.txt
+# Instala o Poetry.
+RUN pip install poetry
+
+# Copia os arquivos de dependências do Poetry e os instala.
+# O Docker irá usar o cache para acelerar o processo se eles não mudarem.
+COPY poetry.lock pyproject.toml /app/
+RUN poetry install --no-root
 
 # Copia todo o código do projeto para o container.
 COPY . /app/
@@ -17,5 +21,5 @@ COPY . /app/
 # Expõe a porta 8000.
 EXPOSE 8000
 
-# Comando para rodar o servidor Gunicorn.
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "smart_mail_classifier.wsgi:application"]
+# Comando para rodar o servidor Gunicorn através do Poetry.
+CMD ["poetry", "run", "gunicorn", "--bind", "0.0.0.0:8000", "smart_mail_classifier.wsgi:application"]
