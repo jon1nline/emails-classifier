@@ -4,21 +4,18 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Defina o diretório de trabalho no container.
+# Define o diretório de trabalho no container.
 WORKDIR /app
 
-# Copie o poetry para o container.
-RUN pip install poetry
+# Copia o arquivo de dependências e as instala.
+COPY requirements.txt /app/
+RUN pip install -r requirements.txt
 
-# Copie os arquivos de dependências e instale-as.
-COPY poetry.lock pyproject.toml /app/
-RUN poetry install --no-root
-
-# Copie o código do projeto para o container.
+# Copia todo o código do projeto para o container.
 COPY . /app/
 
-# Exponha a porta 8000 para que a aplicação possa ser acessada.
+# Expõe a porta 8000.
 EXPOSE 8000
 
 # Comando para rodar o servidor Gunicorn.
-CMD ["poetry", "run", "gunicorn", "--bind", "0.0.0.0:8000", "smart_mail_classifier.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "smart_mail_classifier.wsgi:application"]
